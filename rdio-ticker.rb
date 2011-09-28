@@ -56,9 +56,11 @@ loop do
   last_played_tracks = curl_request("&method=get&keys=#{user_following_keys}&extras=lastSongPlayed,lastSongPlayTime").values
   last_played_tracks.each do |track|
     # Only show songs that have been played within the past 5 minutes and haven't already been displayed
-    if !displayed_tracks.include?(track["lastSongPlayed"]["key"]) && Time.now - Time.parse(DateTime.strptime(track["lastSongPlayTime"], "%FT%T%n").to_s) < 60 * 5
-      puts blue(track["firstName"] + " " + track["lastName"]).ljust(40, " ") + green(track["lastSongPlayed"]["artist"]).ljust(40, " ") + yellow(track["lastSongPlayed"]["name"])
-      displayed_tracks << track["lastSongPlayed"]["key"]
+    if track["lastSongPlayed"] && track["lastSongPlayTime"]
+      if !displayed_tracks.include?(track["lastSongPlayed"]["key"]) && Time.now - Time.parse(DateTime.strptime(track["lastSongPlayTime"], "%FT%T%n").to_s) < 60 * 5
+        puts blue(track["firstName"] + " " + track["lastName"]).ljust(40, " ") + green(track["lastSongPlayed"]["artist"]).ljust(40, " ") + yellow(track["lastSongPlayed"]["name"])
+        displayed_tracks << track["lastSongPlayed"]["key"]
+      end
     end
   end
   
