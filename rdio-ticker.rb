@@ -8,7 +8,7 @@ require 'json'
 require 'date'
 require 'time'
 
-POLL_INTERVAL = 60 # seconds
+POLL_INTERVAL = 30 # seconds
 
 if ARGV[0].nil?
   puts "Usage: ./rdio-ticker.rb RDIO_USERNAME"
