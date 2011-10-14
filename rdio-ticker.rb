@@ -27,7 +27,7 @@ def magenta(text); colorize(text, "\e[35m"); end
 def cyan(text); colorize(text, "\e[36m"); end
 
 def curl_request(params)
-  response = `curl --silent --cookie "secret=%22ed7e9b4021f7cda60c35880640b2f956%22" -d "__rdio_console_secret=ed7e9b4021f7cda60c35880640b2f956#{params}" http://rdioconsole.appspot.com/call`
+  response = `curl --silent --cookie "session=\"c1/+hfJqU4l7W2fP339IplSoE9s=?secret=UydhNDhlMDQ3MzI0NDRiY2Q3NWJkZTY0NGNkM2Y0MmI0MycKcDAKLg==\"" -d "__rdio_console_secret=a48e04732444bcd75bde644cd3f42b43#{params}" http://rdioconsole.appspot.com/call`
   if response == "null"
     puts "Error: User not found"
     exit 1
@@ -39,10 +39,10 @@ end
 puts "Loading..."
 
 # Find user key
-user_key = curl_request("&method=findUser&vanityName=#{ARGV[0]}")["key"]
+user_key = curl_request("&method=findUser&vanityName=#{ARGV[0]}")["result"]["key"]
 
 # Find users that user is following
-user_following = curl_request("&method=userFollowing&user=#{user_key}&count=100")
+user_following = curl_request("&method=userFollowing&user=#{user_key}&count=100")["result"]
 user_following_keys = user_following.map { |user| user["key"] }.join(",")
 displayed_tracks = []
 
@@ -53,12 +53,12 @@ end
   
 loop do
   # Fetch latest tracks from users
-  last_played_tracks = curl_request("&method=get&keys=#{user_following_keys}&extras=lastSongPlayed,lastSongPlayTime").values
+  last_played_tracks = curl_request("&method=get&keys=#{user_following_keys}&extras=lastSongPlayed,lastSongPlayTime")["result"].values
   last_played_tracks.each do |track|
     # Only show songs that have been played within the past 5 minutes and haven't already been displayed
     if track["lastSongPlayed"] && track["lastSongPlayTime"]
       if !displayed_tracks.include?(track["lastSongPlayed"]["key"]) && Time.now - Time.parse(DateTime.strptime(track["lastSongPlayTime"], "%FT%T%n").to_s) < 60 * 5
-        puts blue(track["firstName"] + " " + track["lastName"]).ljust(40, " ") + green(track["lastSongPlayed"]["artist"]).ljust(40, " ") + yellow(track["lastSongPlayed"]["name"])
+        puts cyan(track["firstName"] + " " + track["lastName"]).ljust(40, " ") + green(track["lastSongPlayed"]["artist"]).ljust(40, " ") + yellow(track["lastSongPlayed"]["name"])
         displayed_tracks << track["lastSongPlayed"]["key"]
       end
     end
