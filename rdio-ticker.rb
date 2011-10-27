@@ -27,7 +27,7 @@ def magenta(text); colorize(text, "\e[35m"); end
 def cyan(text); colorize(text, "\e[36m"); end
 
 def curl_request(params)
-  response = `curl --silent --cookie "session=\"c1/+hfJqU4l7W2fP339IplSoE9s=?secret=UydhNDhlMDQ3MzI0NDRiY2Q3NWJkZTY0NGNkM2Y0MmI0MycKcDAKLg==\"" -d "__rdio_console_secret=a48e04732444bcd75bde644cd3f42b43#{params}" http://rdioconsole.appspot.com/call`
+  response = `curl --silent --cookie "session=\"yh5PTbL62y4SdgYdBXUTXmcdzWE=?secret=UycyZTgxYmNjMDI1MjRmZTFhMTgzNmI4MzNlOWFiYWZkZCcKcDAKLg==\"" -d "__rdio_console_secret=2e81bcc02524fe1a1836b833e9abafdd#{params}" http://rdioconsole.appspot.com/call`
   if response == "null"
     puts "Error: User not found"
     exit 1
